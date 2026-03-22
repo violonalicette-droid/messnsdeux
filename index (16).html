@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Alice & Lénaïc</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyBoRWDLl1Q1imn-HhneCrNsiGJijSXuIPQ",
+    authDomain: "mess-481b1.firebaseapp.com",
+    databaseURL: "https://mess-481b1-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "mess-481b1",
+    storageBucket: "mess-481b1.firebasestorage.app",
+    messagingSenderId: "363770777425",
+    appId: "1:363770777425:web:c53fd19f0ae0e769cb4d70"
+  });
+  window.db = firebase.database();
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&family=Lilita+One&display=swap');
+
+:root {
+  --black:   #000000;
+  --black2:  #0d0d12;
+  --black3:  #15151e;
+  --black4:  #1e1e2a;
+  --violet:  #c9b8ff;
+  --violet2: #b39dff;
+  --violet3: #9b82ff;
+  --white:   #ffffff;
+  --gray:    #5a5a72;
+  --border:  #1e1e2e;
+  --text:    #e0d8ff;
+  --subtext: rgba(201,184,255,0.45);
+  --card:    #0d0d12;
+  --me-bubble: #c9b8ff;
+  --other-bubble: #111120;
+  --bg:      #000000;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; overflow: hidden; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: #2a2040; border-radius: 99px; }
+
+/* ══ LOGIN ══ */
+#login {
+  position: fixed; inset: 0; z-index: 999; padding: 24px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: #0a0a0f;
+  overflow: hidden;
+}
+#login::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 0;
+  background-image: radial-gradient(circle, rgba(201,184,255,0.1) 1px, transparent 1px);
+  background-size: 18px 18px;
+  pointer-events: none;
+}
+#login::after {
+  content: '♥ ♡ ♥ ♡ ♥';
+  position: absolute; top: 18px; left: 0; right: 0;
+  text-align: center; font-size: 14px;
+  color: rgba(201,184,255,0.2); letter-spacing: 18px;
+  pointer-events: none; z-index: 1;
+}
+.login-logo {
+  font-family: 'Lilita One', cursive;
+  font-size: 54px; color: var(--violet);
+  text-align: center; position: relative; z-index: 1;
+  -webkit-text-stroke: 3px #0a0a0f;
+  paint-order: stroke fill;
+  filter: drop-shadow(3px 4px 0 rgba(201,184,255,0.35));
+  margin-bottom: 4px; line-height: 1.1; letter-spacing: -1px;
+}
+.login-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: rgba(201,184,255,0.35);
+  margin-bottom: 40px; position: relative; z-index: 1;
+}
+.login-ribbon {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 28px; position: relative; z-index: 1;
+  color: var(--violet); font-size: 13px; font-weight: 700;
+  font-family: 'Inter', sans-serif; letter-spacing: 1.5px; text-transform: uppercase;
+}
+.login-ribbon::before, .login-ribbon::after { content: '★'; font-size: 14px; }
+.login-who {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(201,184,255,0.3);
+  margin-bottom: 16px; position: relative; z-index: 1;
+}
+.login-cards { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 1; }
+.lcard {
+  width: 148px; padding: 24px 16px;
+  border: 2px solid rgba(201,184,255,0.18);
+  border-radius: 22px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  cursor: pointer; background: #141420;
+  box-shadow: 4px 4px 0 rgba(201,184,255,0.12);
+  transition: all 0.18s;
+}
+.lcard:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--violet);
+  box-shadow: 6px 8px 0 rgba(201,184,255,0.22);
+}
+.lcard-av {
+  width: 70px; height: 70px; border-radius: 50%;
+  background: rgba(201,184,255,0.07);
+  border: 2px solid rgba(201,184,255,0.2);
+  font-size: 34px; display: flex; align-items: center; justify-content: center;
+}
+.lcard-name { font-family: 'Lilita One', cursive; font-size: 20px; color: white; }
+.lcard-btn {
+  width: 100%; padding: 9px;
+  background: var(--violet); color: var(--black);
+  border: none; border-radius: 50px;
+  font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12px;
+  cursor: pointer; transition: all 0.15s;
+  box-shadow: 0 3px 0 var(--violet3);
+  letter-spacing: 0.3px;
+}
+.lcard-btn:active { transform: translateY(2px); box-shadow: none; }
+.lcard:hover .lcard-btn { background: var(--violet3); }
+
+
+/* ══ SIDEBAR ══ */
+.sidebar { width: 240px; min-width: 240px; height: 100vh; background: var(--black2); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+.sb-top { padding: 24px 18px 16px; border-bottom: 1px solid var(--border); }
+.sb-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--violet); }
+.sb-sub-line { font-size: 10px; font-weight: 500; color: var(--subtext); margin-top: 3px; }
+.sb-sec { padding: 12px 18px; border-bottom: 1px solid var(--border); }
+.sb-sec-label { font-size: 8px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(201,184,255,0.2); margin-bottom: 8px; }
+.profile-row { display: flex; align-items: center; gap: 10px; background: rgba(201,184,255,0.04); border: 1px solid rgba(201,184,255,0.12); border-radius: 12px; padding: 9px 11px; cursor: pointer; transition: all 0.15s; }
+.profile-row:hover { background: rgba(201,184,255,0.08); border-color: rgba(201,184,255,0.25); }
+.p-av { font-size: 24px; flex-shrink: 0; }
+.p-info { flex: 1; min-width: 0; }
+.p-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.p-mood { font-size: 10px; color: var(--subtext); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.p-edit { font-size: 10px; color: rgba(201,184,255,0.15); flex-shrink: 0; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 6px #4ade80; flex-shrink: 0; animation: pulsedot 2s ease-in-out infinite; }
+.live-dot.off { background: #f87171; box-shadow: 0 0 6px #f87171; animation: none; }
+@keyframes pulsedot { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:0.7} }
+.other-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; padding: 8px 11px; }
+.o-av { font-size: 20px; flex-shrink: 0; }
+.o-info { flex: 1; min-width: 0; }
+.o-name { font-size: 12px; font-weight: 600; color: rgba(201,184,255,0.6); }
+.o-mood { font-size: 10px; color: rgba(201,184,255,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 4px; }
+.nb { display: flex; align-items: center; justify-content: center; padding: 9px 14px; border-radius: 10px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; color: rgba(201,184,255,0.35); border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); cursor: pointer; width: 100%; text-align: center; transition: all 0.15s; letter-spacing: 0.2px; }
+.nb:hover { background: rgba(201,184,255,0.07); color: rgba(201,184,255,0.8); border-color: rgba(201,184,255,0.15); }
+.nb.active { background: rgba(201,184,255,0.1); color: var(--violet); border-color: rgba(201,184,255,0.3); font-weight: 700; }
+.nb-icon { font-size: 16px; width: 22px; text-align: center; }
+.sb-foot { padding: 10px 10px 18px; border-top: 1px solid var(--border); }
+.switch-btn { width: 100%; padding: 8px 12px; background: transparent; border: 1px solid var(--border); border-radius: 10px; color: rgba(201,184,255,0.25); font-family: 'Inter', sans-serif; font-weight: 600; font-size: 12px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+.switch-btn:hover { background: rgba(255,255,255,0.03); color: rgba(201,184,255,0.5); }
+
+/* ══ MAIN ══ */
+.main { flex: 1; height: 100vh; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.view { display: none; flex-direction: column; flex: 1; overflow: hidden; min-height: 0; }
+.view.active { display: flex; }
+.topbar { padding: 13px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; background: var(--black2); flex-shrink: 0; }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--violet); }
+.topbar-sub { font-size: 11px; font-weight: 500; color: var(--subtext); margin-top: 1px; }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.sticker-btn { background: none; border: 1px solid var(--border); border-radius: 10px; padding: 5px 12px; cursor: pointer; font-size: 13px; color: var(--subtext); font-weight: 600; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+.sticker-btn:hover { border-color: var(--violet2); color: var(--violet); }
+.mob-back { display: none; background: none; border: 1px solid var(--border); border-radius: 10px; padding: 5px 10px; cursor: pointer; font-size: 12px; color: var(--subtext); font-weight: 600; font-family: 'Inter', sans-serif; }
+
+/* ══ MESSAGES ══ */
+#messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 4px; background: var(--black); background-image: radial-gradient(circle, rgba(201,184,255,0.04) 1px, transparent 1px); background-size: 20px 20px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.msg-group { display: flex; flex-direction: column; gap: 2px; margin-bottom: 6px; }
+.msg-group.me { align-items: flex-end; }
+.msg-group.other { align-items: flex-start; }
+.msg-sender { font-size: 10px; font-weight: 600; padding: 0 14px; margin-bottom: 4px; color: rgba(201,184,255,0.35); letter-spacing: 0.2px; }
+.bubble { max-width: 68%; padding: 10px 14px; font-size: 15px; font-weight: 400; line-height: 1.5; word-break: break-word; animation: pop 0.18s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes pop { from{transform:scale(0.85) translateY(4px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+.me .bubble { background: var(--violet); border-radius: 18px 18px 4px 18px; color: #0d0d18; font-weight: 500; }
+.other .bubble { background: var(--other-bubble); border-radius: 18px 18px 18px 4px; color: var(--text); border: 1px solid var(--border); }
+.ts { font-size: 10px; font-weight: 400; opacity: 0; display: block; margin-top: 2px; transition: opacity 0.2s; }
+.bubble:hover .ts { opacity: 0.4; }
+.me .bubble .ts { text-align: right; color: rgba(13,13,24,0.5); }
+.other .bubble .ts { text-align: left; color: var(--subtext); }
+.date-sep { text-align: center; font-size: 11px; font-weight: 500; color: rgba(201,184,255,0.2); display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+.date-sep::before,.date-sep::after { content:''; flex:1; height:1px; background: var(--border); }
+.typing-wrap { display: none; align-items: center; gap: 8px; padding: 0 16px 6px; flex-shrink: 0; }
+.typing-wrap.visible { display: flex; }
+.typing-dots { background: var(--other-bubble); border: 1px solid var(--border); border-radius: 18px 18px 18px 4px; padding: 10px 14px; display: flex; gap: 4px; align-items: center; }
+.td { width: 6px; height: 6px; border-radius: 50%; background: var(--violet2); animation: bounce 1.2s ease-in-out infinite; }
+.td:nth-child(2){animation-delay:.2s} .td:nth-child(3){animation-delay:.4s}
+@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+.typing-name { font-size: 11px; font-weight: 500; color: var(--subtext); }
+
+/* ══ INPUT ══ */
+.input-area { padding: 10px 14px 12px; border-top: 1px solid var(--border); background: var(--black2); flex-shrink: 0; }
+.emoji-strip { display: flex; gap: 2px; padding-bottom: 8px; overflow-x: auto; scrollbar-width: none; }
+.emoji-strip::-webkit-scrollbar { display: none; }
+.ep { font-size: 20px; cursor: pointer; padding: 2px 4px; border-radius: 6px; flex-shrink: 0; transition: transform 0.1s; }
+.ep:hover { transform: scale(1.3); }
+.input-row { display: flex; gap: 8px; align-items: flex-end; }
+#msg-input { flex: 1; border: 1px solid var(--border); border-radius: 22px; padding: 10px 16px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 400; outline: none; resize: none; max-height: 100px; line-height: 1.4; color: var(--text); background: var(--black3); transition: border-color 0.2s; -webkit-appearance: none; }
+#msg-input:focus { border-color: var(--violet2); }
+#msg-input::placeholder { color: rgba(201,184,255,0.2); }
+#send-btn { width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--violet); color: #0d0d18; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s, transform 0.1s; }
+#send-btn:hover { background: var(--violet2); }
+#send-btn:active { transform: scale(0.92); }
+
+/* ══ STICKER POPUP ══ */
+.sticker-popup { position: fixed; background: var(--black3); border-radius: 18px; padding: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.6); border: 1px solid var(--border); display: none; grid-template-columns: repeat(6,1fr); gap: 6px; z-index: 300; }
+.sticker-popup.open { display: grid; }
+.so { font-size: 22px; cursor: pointer; text-align: center; padding: 5px; border-radius: 8px; transition: transform 0.1s; }
+.so:hover { background: var(--black4); transform: scale(1.25); }
+
+/* ══ CAPSULE ══ */
+.cap-inner { flex: 1; overflow-y: auto; padding: 18px 16px; display: flex; flex-direction: column; gap: 14px; background: var(--black); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 20px 18px; }
+.card-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--violet); margin-bottom: 14px; }
+.cap-form { display: flex; flex-direction: column; gap: 12px; }
+.cap-form textarea { width: 100%; border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 400; color: var(--text); background: var(--black3); outline: none; resize: vertical; min-height: 90px; line-height: 1.5; transition: border-color 0.2s; }
+.cap-form textarea:focus { border-color: var(--violet2); }
+.cap-form textarea::placeholder { color: rgba(201,184,255,0.2); }
+.form-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.form-field { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 110px; }
+.form-label { font-size: 9px; font-weight: 700; color: var(--subtext); letter-spacing: 1.5px; text-transform: uppercase; }
+.form-field select, .form-field input[type="date"] { border: 1px solid var(--border); border-radius: 12px; padding: 9px 12px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: var(--text); background: var(--black3); outline: none; width: 100%; -webkit-appearance: none; }
+.seal-btn { background: var(--violet); color: #0d0d18; border: none; border-radius: 50px; padding: 11px 24px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; align-self: flex-start; transition: background 0.15s; }
+.seal-btn:hover { background: var(--violet2); }
+.caps-grid { display: flex; flex-direction: column; gap: 10px; }
+.cap-card { border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; background: var(--black3); }
+.cap-card.locked { border-left: 4px solid var(--violet2); }
+.cap-card.unlocked { border-left: 4px solid #4ade80; }
+.cc-icon { font-size: 24px; margin-bottom: 5px; }
+.cc-status { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+.locked .cc-status { color: var(--violet2); }
+.unlocked .cc-status { color: #4ade80; }
+.cc-from { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.cc-date { font-size: 12px; font-weight: 400; color: var(--subtext); }
+.cc-hint { margin-top: 8px; font-size: 12px; color: var(--subtext); font-style: italic; }
+.open-cap-btn { margin-top: 10px; width: 100%; background: var(--violet); color: #0d0d18; border: none; border-radius: 50px; padding: 9px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; transition: background 0.15s; }
+.open-cap-btn:hover { background: var(--violet2); }
+.empty-caps { text-align: center; padding: 28px; color: rgba(201,184,255,0.2); font-weight: 400; font-size: 14px; }
+.empty-caps span { font-size: 34px; display: block; margin-bottom: 8px; }
+
+/* ══ AVATAR PICKER ══ */
+#av-picker { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 600; display: none; align-items: center; justify-content: center; padding: 20px; }
+#av-picker.open { display: flex; }
+.av-box { background: var(--black2); border-radius: 22px; padding: 22px; max-width: 380px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.7); border: 1px solid var(--border); }
+.av-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--violet); text-align: center; margin-bottom: 14px; }
+.av-label { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--subtext); margin-bottom: 8px; }
+.av-grid { display: grid; grid-template-columns: repeat(8,1fr); gap: 3px; margin-bottom: 4px; }
+.av-opt { font-size: 23px; text-align: center; padding: 5px 2px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; transition: all 0.12s; }
+.av-opt:hover { background: var(--black4); }
+.av-opt.sel { background: rgba(201,184,255,0.12); border-color: var(--violet2); }
+.mood-label-pick { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--subtext); margin-top: 14px; margin-bottom: 8px; }
+#mood-input { width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 9px 14px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; color: var(--text); background: var(--black3); outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
+#mood-input:focus { border-color: var(--violet2); }
+#mood-input::placeholder { color: rgba(201,184,255,0.2); }
+.mood-pills { display: flex; gap: 5px; flex-wrap: wrap; max-height: 140px; overflow-y: auto; }
+.mp { font-size: 12px; padding: 4px 10px; border-radius: 50px; background: var(--black3); border: 1px solid var(--border); cursor: pointer; font-weight: 500; color: rgba(201,184,255,0.6); white-space: nowrap; flex-shrink: 0; transition: all 0.12s; }
+.mp:hover, .mp.sel { background: var(--violet); color: #0d0d18; border-color: var(--violet); }
+.av-save { width: 100%; background: var(--violet); color: #0d0d18; border: none; border-radius: 50px; padding: 11px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 14px; transition: background 0.15s; }
+.av-save:hover { background: var(--violet2); }
+.av-cancel { width: 100%; background: none; color: var(--subtext); border: 1px solid var(--border); border-radius: 50px; padding: 9px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 8px; }
+
+/* ══ MODAL ══ */
+#modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; }
+#modal.open { display: flex; }
+.modal-box { background: var(--black2); border-radius: 22px; padding: 28px 22px; max-width: 400px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.7); border: 1px solid var(--border); }
+.modal-icon { font-size: 40px; text-align: center; margin-bottom: 10px; }
+.modal-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--violet); text-align: center; margin-bottom: 8px; }
+.modal-body { font-size: 14px; font-weight: 400; color: var(--subtext); text-align: center; line-height: 1.6; margin-bottom: 14px; }
+.modal-msg { background: var(--black3); border-radius: 14px; padding: 14px 16px; font-size: 15px; font-weight: 400; color: var(--text); line-height: 1.65; margin-bottom: 16px; border: 1px solid var(--border); white-space: pre-wrap; }
+.modal-close-btn { width: 100%; background: var(--violet); color: #0d0d18; border: none; border-radius: 50px; padding: 12px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: background 0.15s; }
+.modal-close-btn:hover { background: var(--violet2); }
+
+/* ══ TOAST ══ */
+#toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--black2); color: var(--violet); border: 1px solid var(--border); border-radius: 12px; padding: 9px 18px; font-size: 13px; font-weight: 600; white-space: nowrap; z-index: 800; opacity: 0; transition: all 0.25s; pointer-events: none; }
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ══ MOBILE ══ */
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--black2); height: 58px; z-index: 200; border-top: 1px solid var(--border); }
+.bnb-row { display: flex; height: 100%; }
+.bnb { flex: 1; display: flex; align-items: center; justify-content: center; border: none; border-right: 1px solid var(--border); background: none; cursor: pointer; color: rgba(201,184,255,0.25); font-family: 'Inter', sans-serif; font-weight: 600; font-size: 12px; transition: all 0.15s; }
+.bnb:last-child { border-right: none; }
+.bnb:hover { background: rgba(201,184,255,0.04); color: rgba(201,184,255,0.6); }
+.bnb.active { color: var(--violet); background: rgba(201,184,255,0.06); }
+.bnb-icon { font-size: 19px; }
+.mob-profile-strip { display: none; background: var(--black2); padding: 7px 14px; align-items: center; gap: 10px; border-top: 1px solid var(--border); flex-shrink: 0; }
+.mob-me { display: flex; align-items: center; gap: 7px; flex: 1; cursor: pointer; }
+.mob-av { font-size: 20px; }
+.mob-n { font-size: 11px; font-weight: 600; color: var(--text); }
+.mob-m { font-size: 10px; color: var(--subtext); font-weight: 400; max-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mob-div { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
+.mob-other { display: flex; align-items: center; gap: 7px; flex: 1; justify-content: flex-end; }
+
+@media (max-width: 640px) {
+  .sidebar { display: none; }
+  .bottom-nav { display: block; }
+  .mob-profile-strip { display: flex; }
+  .mob-back { display: block; }
+  .main { padding-bottom: 102px; }
+  #toast { bottom: 112px; }
+  .sticker-popup { left: 8px !important; right: 8px !important; bottom: 112px !important; width: auto !important; grid-template-columns: repeat(7,1fr); }
+  .bubble { max-width: 82%; }
+  #messages { padding: 14px 12px; }
+  .cap-inner { padding: 16px 14px; }
+  .topbar { padding: 12px 16px; }
+  .av-grid { grid-template-columns: repeat(7,1fr); }
+}
+
+/* ══ CALENDRIER ══ */
+.cal-wrap { flex: 1; overflow-y: auto; padding: 18px 16px; display: flex; flex-direction: column; gap: 14px; background: var(--black); }
+.cal-nav { display: flex; align-items: center; justify-content: space-between; background: var(--black2); border: 1px solid var(--border); border-radius: 16px; padding: 13px 16px; color: var(--text); }
+.cal-nav-btn { background: rgba(255,255,255,0.05); border: none; color: var(--violet); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.cal-nav-btn:hover { background: rgba(201,184,255,0.1); }
+.cal-month-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--violet); }
+.cal-grid-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; }
+.cal-day-names { display: grid; grid-template-columns: repeat(7,1fr); background: #0a0a14; }
+.cal-day-name { text-align: center; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(201,184,255,0.3); padding: 9px 0; }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); }
+.cal-cell { min-height: 82px; border-top: 1px solid var(--border); border-right: 1px solid var(--border); padding: 6px 5px; cursor: pointer; transition: background 0.12s; position: relative; overflow: hidden; background: var(--card); }
+.cal-cell:nth-child(7n) { border-right: none; }
+.cal-cell:hover { background: rgba(201,184,255,0.05); }
+.cal-cell.today { background: rgba(201,184,255,0.07); }
+.cal-cell.empty { background: #050508; cursor: default; }
+.cal-cell.selected { background: rgba(201,184,255,0.08); outline: 2px solid var(--violet2); outline-offset: -2px; }
+.cal-num { font-size: 12px; font-weight: 700; color: rgba(201,184,255,0.5); margin-bottom: 3px; }
+.cal-cell.today .cal-num { color: var(--violet); font-weight: 800; }
+.cal-dot-row { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
+.cal-ev-chip { font-size: 9px; font-weight: 600; color: white; border-radius: 4px; padding: 1px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; line-height: 1.4; }
+.cal-form-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; display: none; }
+.cal-form-card.open { display: block; }
+.cal-form-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--violet); margin-bottom: 12px; }
+.cal-form-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.cal-field { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 120px; }
+.cal-field-label { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--subtext); }
+.cal-field input[type="text"], .cal-field select { border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 400; color: var(--text); background: var(--black3); outline: none; width: 100%; transition: border-color 0.15s; }
+.cal-field input[type="text"]:focus { border-color: var(--violet2); }
+.color-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.color-pill { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.12s; flex-shrink: 0; }
+.color-pill.sel { border-color: var(--violet); transform: scale(1.22); }
+.cal-add-btn { background: var(--violet); color: #0d0d18; border: none; border-radius: 50px; padding: 9px 20px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 6px; transition: background 0.15s; }
+.cal-add-btn:hover { background: var(--violet2); }
+.cal-events-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; }
+.cal-events-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--violet); margin-bottom: 10px; }
+.cal-event-item { display: flex; align-items: center; gap: 10px; padding: 9px 11px; border-radius: 11px; background: var(--black3); border: 1px solid var(--border); margin-bottom: 7px; }
+.cal-event-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.cal-event-info { flex: 1; min-width: 0; }
+.cal-event-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.cal-event-meta { font-size: 11px; font-weight: 400; color: var(--subtext); margin-top: 1px; }
+.cal-del-btn { background: none; border: none; color: var(--subtext); cursor: pointer; font-size: 15px; padding: 4px; border-radius: 6px; flex-shrink: 0; transition: all 0.12s; }
+.cal-del-btn:hover { color: #f87171; background: rgba(248,113,113,0.08); }
+.cal-no-events { text-align: center; padding: 20px; color: var(--subtext); font-weight: 400; font-size: 13px; }
+@media (max-width: 640px) { .cal-cell { min-height: 60px; } .cal-wrap { padding: 14px 12px; } }
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="modal-box">
+    <div class="modal-icon" id="modal-icon"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div id="modal-msg" class="modal-msg" style="display:none"></div>
+    <button class="modal-close-btn" id="modal-close-btn">Fermer</button>
+  </div>
+</div>
+
+<!-- AVATAR PICKER -->
+<div id="av-picker">
+  <div class="av-box">
+    <div class="av-title">Mon profil ✨</div>
+    <div class="av-label">Avatar</div>
+    <div class="av-grid" id="av-grid"></div>
+    <div class="mood-label-pick">Humeur du jour</div>
+    <input type="text" id="mood-input" placeholder="ex: je pense à toi 💭" maxlength="50">
+    <div class="mood-pills" id="mood-pills"></div>
+    <button class="av-save" id="btn-save-profile">Sauvegarder ✓</button>
+    <button class="av-cancel" id="btn-cancel-profile">Annuler</button>
+  </div>
+</div>
+
+<!-- STICKER POPUP -->
+<div class="sticker-popup" id="sticker-popup"></div>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-logo">Alice & Lénaïc</div>
+  <div class="login-sub">votre espace privé</div>
+  <div class="login-ribbon">choisissez votre profil</div>
+  <div class="login-cards">
+    <div class="lcard" id="lcard-alice">
+      <div class="lcard-av" id="lcard-av-alice">🥰</div>
+      <div class="lcard-name">Alice</div>
+      <button class="lcard-btn">C'est moi →</button>
+    </div>
+    <div class="lcard" id="lcard-lenaic">
+      <div class="lcard-av" id="lcard-av-lenaic">😎</div>
+      <div class="lcard-name">Lénaïc</div>
+      <button class="lcard-btn">C'est moi →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-top">
+    <div class="sb-logo">Alice <span>&</span> Lénaïc</div>
+    <div class="sb-sub-line">espace privé · <span id="conn-label">connexion...</span></div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-sec-label">Mon profil</div>
+    <div class="profile-row" id="btn-open-picker">
+      <div class="p-av" id="sb-my-av">😊</div>
+      <div class="p-info">
+        <div class="p-name" id="sb-my-name">—</div>
+        <div class="p-mood" id="sb-my-mood">Ajouter une humeur...</div>
+      </div>
+      <span class="p-edit">✏️</span>
+      <span class="live-dot" id="live-dot"></span>
+    </div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-sec-label">L'autre</div>
+    <div class="other-row">
+      <div class="o-av" id="sb-other-av">😊</div>
+      <div class="o-info">
+        <div class="o-name" id="sb-other-name">—</div>
+        <div class="o-mood" id="sb-other-mood">hors ligne</div>
+      </div>
+    </div>
+  </div>
+  <div class="sb-nav">
+    <button class="nb active" id="pc-nav-chat" onclick="switchView('chat')">Messagerie</button>
+    <button class="nb" id="pc-nav-capsule" onclick="switchView('capsule')">Capsule temporelle</button>
+    <button class="nb" id="pc-nav-cal" onclick="switchView('cal')">Calendrier</button>
+  </div>
+  <div class="sb-foot">
+    <button class="switch-btn" id="btn-switch-sb">↩ Changer d'utilisateur</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- CHAT -->
+  <div class="view active" id="view-chat">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Messages</div>
+        <div class="topbar-sub" id="msg-count">chargement...</div>
+      </div>
+      <div class="topbar-right">
+        <button class="sticker-btn" id="btn-sticker">Stickers</button>
+        <button class="mob-back" id="btn-switch-mob">↩</button>
+      </div>
+    </div>
+    <div id="messages"></div>
+    <div class="typing-wrap" id="typing">
+      <div class="typing-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div>
+      <div class="typing-name" id="typing-name">…</div>
+    </div>
+    <div class="input-area">
+      <div class="emoji-strip" id="emoji-strip"></div>
+      <div class="input-row">
+        <textarea id="msg-input" rows="1" placeholder="Écris quelque chose..."></textarea>
+        <button id="send-btn">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPSULE -->
+  <div class="view" id="view-capsule">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Capsule temporelle</div>
+        <div class="topbar-sub">un message dans le futur</div>
+      </div>
+      <div class="topbar-right">
+        <button class="mob-back" id="btn-switch-mob2">↩</button>
+      </div>
+    </div>
+    <div class="cap-inner">
+      <div class="card">
+        <div class="card-title">Écrire une capsule</div>
+        <div class="cap-form">
+          <textarea id="cap-msg" placeholder="Ton message pour le futur..."></textarea>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">De</div><select id="cap-from"><option value="alice">Alice</option><option value="lenaic">Lénaïc</option></select></div>
+            <div class="form-field"><div class="form-label">Pour</div><select id="cap-to"><option value="both">Nous deux</option><option value="alice">Alice</option><option value="lenaic">Lénaïc</option></select></div>
+            <div class="form-field"><div class="form-label">Ouvrir le</div><input type="date" id="cap-date"></div>
+          </div>
+          <button class="seal-btn" id="btn-seal">Sceller</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Capsules</div>
+        <div class="caps-grid" id="caps-grid"><div class="empty-caps"><span>🌌</span>Aucune capsule pour l'instant...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALENDRIER -->
+  <div class="view" id="view-cal">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Calendrier</div>
+        <div class="topbar-sub">événements partagés</div>
+      </div>
+      <div class="topbar-right">
+        <button class="mob-back" id="btn-switch-mob3">↩</button>
+      </div>
+    </div>
+    <div class="cal-wrap">
+      <!-- nav mois -->
+      <div class="cal-nav">
+        <button class="cal-nav-btn" id="cal-prev">‹</button>
+        <div class="cal-month-title" id="cal-month-title">—</div>
+        <button class="cal-nav-btn" id="cal-next">›</button>
+      </div>
+      <!-- grille -->
+      <div class="cal-grid-wrap">
+        <div class="cal-day-names">
+          <div class="cal-day-name">Lun</div><div class="cal-day-name">Mar</div>
+          <div class="cal-day-name">Mer</div><div class="cal-day-name">Jeu</div>
+          <div class="cal-day-name">Ven</div><div class="cal-day-name">Sam</div>
+          <div class="cal-day-name">Dim</div>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+      <!-- dummy placeholder, real day detail is in overlay -->
+      <div style="height:1px"></div>
+    </div>
+  </div>
+
+
+<!-- DAY DETAIL OVERLAY -->
+<div id="day-overlay" style="display:none;position:fixed;inset:0;background:#0a0a0f;z-index:150;display:none;flex-direction:column;">
+  <div class="topbar" style="border-bottom:1.5px solid var(--border);">
+    <button onclick="closeDayOverlay()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--violet);padding:0 8px 0 0;">‹</button>
+    <div>
+      <div class="topbar-title" id="day-overlay-title">—</div>
+      <div class="topbar-sub" id="day-overlay-sub">—</div>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:14px;">
+    <!-- add form -->
+    <div class="card" style="padding:18px 20px;">
+      <div class="card-title" style="font-size:14px;margin-bottom:12px;">➕ Ajouter un événement</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <input type="text" id="cal-event-title" placeholder="ex: Ciné, RDV médecin..." maxlength="60"
+          style="border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--black);background:var(--light);outline:none;">
+        <div>
+          <div style="font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin-bottom:8px;">Couleur</div>
+          <div class="color-pills" id="color-pills"></div>
+        </div>
+        <button class="cal-add-btn" id="btn-add-event">Ajouter ✓</button>
+      </div>
+    </div>
+    <!-- events list -->
+    <div class="card" style="padding:18px 20px;" id="day-events-section">
+      <div class="card-title" style="font-size:14px;margin-bottom:12px;">📋 Événements du jour</div>
+      <div id="cal-events-list"></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="bnb-row">
+    <button class="bnb active" id="mob-nav-chat" onclick="switchView('chat')">Messages</button>
+    <button class="bnb" id="mob-nav-capsule" onclick="switchView('capsule')">Capsule</button>
+    <button class="bnb" id="mob-nav-cal" onclick="switchView('cal')">Calendrier</button>
+  </div>
+</div>
+
+<!-- MOBILE PROFILE STRIP -->
+<div class="mob-profile-strip">
+  <div class="mob-me" id="btn-open-picker-mob">
+    <div class="mob-av" id="mob-my-av">😊</div>
+    <div>
+      <div class="mob-n" id="mob-my-name">—</div>
+      <div class="mob-m" id="mob-my-mood">Ajouter une humeur...</div>
+    </div>
+  </div>
+  <div class="mob-div"></div>
+  <div class="mob-other">
+    <div style="text-align:right">
+      <div class="mob-n" id="mob-other-name">—</div>
+      <div class="mob-m" id="mob-other-mood">hors ligne</div>
+    </div>
+    <div class="mob-av" id="mob-other-av">😊</div>
+  </div>
+</div>
+
+<script>
+// ══════════════ CONSTANTS ══════════════
+const AVATARS = [
+  '🫠','🫥','🤡','👽','🐸','🐌','🥴','🙂',
+  '😌','😊','😐','😶','😴','😵‍💫','😤','😭',
+  '😂','🥺','😎','🥰','😘','😚',
+  '💕','💖','💞','🫶','😻','💋',
+  '😒','🙄','😏','😑','😬','😈','🫥','😶‍🌫️',
+  '🤓','📚','😵','😪','☕','🧃','😖','😩',
+  '🐸','🐥','🐻','🐱','🐰','🐢','🦥','🐙'
+];
+
+const MOODS = [
+  'focus + aura ✨','main character energy 🌟','vibe douce 🌸','silence 🤫',
+  'en mode PNJ 🚶','en PLS académique 📚','je travaille 💻','je vais disparaître 2h 👻',
+  'flemme de tout le monde 🫠','humeur instable ⚡','légèrement saoulée 😮‍💨',
+  'je pense à toi 💭','humeur stable 🧘','dodo 😴','productive 🔥',
+  'cerveau en pause 🫧','musicien mode 🎵','fatigué 🥱'
+];
+
+const QUICK_EMOJIS = ['😂','🥰','😭','✨','💫','🔥','🤩','👀','🫶','😮‍💨','🫠','💀','🥳','🤭','👑','🚀'];
+const STICKERS = ['🎉','🥳','😍','🤭','💀','🫠','🤡','🫶','👁️','💋','👑','🪄','🌈','🎭','⭐','🚀','🦄','🍓','🫧','🌊','🍀','🎪'];
+
+// ══════════════ STATE ══════════════
+let currentUser = null;
+let selectedAv = '😊';
+let firstLoad = true;
+let typingTimer = null;
+let toastTimer = null;
+
+// ══════════════ BOOT ══════════════
+window.addEventListener('load', () => {
+  buildAvatarGrid();
+  buildMoodPills();
+  buildEmojiStrip();
+  buildStickerGrid();
+  wireButtons();
+  // show saved avatars on login cards
+  db.ref('profiles/alice').once('value', s => { const av = s.val()?.avatar; if (av) document.getElementById('lcard-av-alice').textContent = av; });
+  db.ref('profiles/lenaic').once('value', s => { const av = s.val()?.avatar; if (av) document.getElementById('lcard-av-lenaic').textContent = av; });
+});
+
+// ══════════════ BUILD UI ══════════════
+function buildAvatarGrid() {
+  const grid = document.getElementById('av-grid');
+  AVATARS.forEach(a => {
+    const el = document.createElement('div');
+    el.className = 'av-opt';
+    el.textContent = a;
+    grid.appendChild(el);
+  });
+  grid.addEventListener('click', e => {
+    const opt = e.target.closest('.av-opt');
+    if (!opt) return;
+    grid.querySelectorAll('.av-opt').forEach(x => x.classList.remove('sel'));
+    opt.classList.add('sel');
+    selectedAv = opt.textContent;
+  });
+}
+
+function buildMoodPills() {
+  const container = document.getElementById('mood-pills');
+  MOODS.forEach(m => {
+    const el = document.createElement('span');
+    el.className = 'mp';
+    el.textContent = m;
+    el.addEventListener('click', () => {
+      container.querySelectorAll('.mp').forEach(x => x.classList.remove('sel'));
+      el.classList.add('sel');
+      document.getElementById('mood-input').value = m;
+    });
+    container.appendChild(el);
+  });
+}
+
+function buildEmojiStrip() {
+  const strip = document.getElementById('emoji-strip');
+  QUICK_EMOJIS.forEach(e => {
+    const el = document.createElement('span');
+    el.className = 'ep';
+    el.textContent = e;
+    el.addEventListener('click', () => {
+      const inp = document.getElementById('msg-input');
+      inp.value += e;
+      inp.focus();
+    });
+    strip.appendChild(el);
+  });
+}
+
+function buildStickerGrid() {
+  const popup = document.getElementById('sticker-popup');
+  STICKERS.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'so';
+    el.textContent = s;
+    el.addEventListener('click', () => {
+      sendSticker(s);
+      popup.classList.remove('open');
+    });
+    popup.appendChild(el);
+  });
+}
+
+function wireButtons() {
+  // login
+  document.getElementById('lcard-alice').addEventListener('click', () => login('alice'));
+  document.getElementById('lcard-lenaic').addEventListener('click', () => login('lenaic'));
+  // send message
+  document.getElementById('send-btn').addEventListener('click', sendMsg);
+  document.getElementById('msg-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+    else onTyping();
+  });
+  document.getElementById('msg-input').addEventListener('input', e => {
+    e.target.style.height = 'auto';
+    e.target.style.height = Math.min(e.target.scrollHeight, 100) + 'px';
+    onTyping();
+  });
+  // sticker
+  document.getElementById('btn-sticker').addEventListener('click', e => {
+    e.stopPropagation();
+    const popup = document.getElementById('sticker-popup');
+    if (!popup.classList.contains('open')) {
+      const r = e.target.getBoundingClientRect();
+      if (window.innerWidth > 640) {
+        popup.style.bottom = (window.innerHeight - r.top + 8) + 'px';
+        popup.style.left = r.left + 'px';
+        popup.style.width = '280px';
+      }
+    }
+    popup.classList.toggle('open');
+  });
+  // seal capsule
+  document.getElementById('btn-seal').addEventListener('click', sealCapsule);
+  // profile picker
+  document.getElementById('btn-open-picker').addEventListener('click', openPicker);
+  document.getElementById('btn-open-picker-mob').addEventListener('click', openPicker);
+  document.getElementById('btn-save-profile').addEventListener('click', saveProfile);
+  document.getElementById('btn-cancel-profile').addEventListener('click', closePicker);
+  // switch user
+  document.getElementById('btn-switch-sb').addEventListener('click', switchUser);
+  document.getElementById('btn-switch-mob').addEventListener('click', switchUser);
+  document.getElementById('btn-switch-mob2').addEventListener('click', switchUser);
+  // modal close
+  document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+  // global click: close popups
+  document.addEventListener('click', e => {
+    const popup = document.getElementById('sticker-popup');
+    if (!e.target.closest('#sticker-popup') && e.target.id !== 'btn-sticker' && !e.target.closest('#btn-sticker'))
+      popup.classList.remove('open');
+    if (e.target.id === 'modal') closeModal();
+    if (e.target.id === 'av-picker') closePicker();
+  });
+}
+
+// ══════════════ LOGIN ══════════════
+function login(user) {
+  currentUser = user;
+  document.getElementById('login').style.display = 'none';
+  // sidebar
+  document.getElementById('sb-my-name').textContent = user === 'alice' ? 'Alice' : 'Lénaïc';
+  document.getElementById('sb-other-name').textContent = user === 'alice' ? 'Lénaïc' : 'Alice';
+  // mobile
+  document.getElementById('mob-my-name').textContent = user === 'alice' ? 'Alice' : 'Lénaïc';
+  document.getElementById('mob-other-name').textContent = user === 'alice' ? 'Lénaïc' : 'Alice';
+  // capsule from
+  document.getElementById('cap-from').value = user;
+  document.getElementById('cap-date').min = new Date().toISOString().split('T')[0];
+  startApp();
+}
+
+function switchUser() {
+  db.ref('messages').off();
+  db.ref('typing').off();
+  db.ref('capsules').off();
+  db.ref('profiles').off();
+  db.ref('.info/connected').off();
+  currentUser = null;
+  firstLoad = true;
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('login').style.display = 'flex';
+}
+
+// ══════════════ APP START ══════════════
+function startApp() {
+  watchConnection();
+  loadMessages();
+  watchTyping();
+  watchCapsules();
+  watchProfiles();
+  initCalendar();
+}
+
+// ══════════════ CONNECTION ══════════════
+function watchConnection() {
+  db.ref('.info/connected').on('value', snap => {
+    const ok = snap.val();
+    document.querySelectorAll('.live-dot').forEach(d => d.className = 'live-dot' + (ok ? '' : ' off'));
+    document.getElementById('conn-label').textContent = ok ? 'en ligne' : 'reconnexion...';
+    showToast(ok ? '✓ Connecté' : '✗ Connexion perdue');
+  });
+}
+
+// ══════════════ MESSAGES ══════════════
+function loadMessages() {
+  firstLoad = true;
+  const ref = db.ref('messages').limitToLast(100);
+
+  ref.once('value', snap => {
+    firstLoad = false;
+    document.getElementById('messages').innerHTML = '';
+    addSep(new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' }));
+    const val = snap.val();
+    if (val) {
+      Object.values(val).forEach(m => addBubble(m.user, m.text, m.time, false));
+      setCount(Object.keys(val).length);
+    } else {
+      document.getElementById('msg-count').textContent = 'Aucun message encore';
+    }
+    // now listen for new ones
+    ref.on('child_added', snap => {
+      if (firstLoad) return;
+      const m = snap.val();
+      addBubble(m.user, m.text, m.time, true);
+      db.ref('messages').once('value', s => setCount(s.numChildren()));
+    });
+  });
+}
+
+function setCount(n) {
+  document.getElementById('msg-count').textContent = n + ' message' + (n > 1 ? 's' : '');
+}
+
+function addBubble(user, text, timeStr, animate) {
+  const msgs = document.getElementById('messages');
+  const isMe = user === currentUser;
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-group ' + (isMe ? 'me' : 'other');
+  const snd = document.createElement('div');
+  snd.className = 'msg-sender';
+  snd.textContent = user === 'alice' ? 'Alice' : 'Lénaïc';
+  const bub = document.createElement('div');
+  bub.className = 'bubble';
+  if (!animate) bub.style.animation = 'none';
+  bub.innerHTML = text + '<span class="ts">' + timeStr + '</span>';
+  wrap.appendChild(snd);
+  wrap.appendChild(bub);
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addSep(text) {
+  const el = document.createElement('div');
+  el.className = 'date-sep';
+  el.textContent = text;
+  document.getElementById('messages').appendChild(el);
+}
+
+function sendMsg() {
+  if (!currentUser) return;
+  const inp = document.getElementById('msg-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  const time = new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+  db.ref('messages').push({ user: currentUser, text, time, ts: Date.now() });
+  inp.value = '';
+  inp.style.height = 'auto';
+  db.ref('typing/' + currentUser).set(false);
+}
+
+function sendSticker(s) {
+  if (!currentUser) return;
+  const time = new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+  db.ref('messages').push({ user: currentUser, text: '<span style="font-size:36px">' + s + '</span>', time, ts: Date.now() });
+}
+
+// ══════════════ TYPING ══════════════
+function onTyping() {
+  if (!currentUser) return;
+  db.ref('typing/' + currentUser).set(true);
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(() => db.ref('typing/' + currentUser).set(false), 2500);
+}
+
+function watchTyping() {
+  const other = currentUser === 'alice' ? 'lenaic' : 'alice';
+  db.ref('typing/' + other).on('value', snap => {
+    const ind = document.getElementById('typing');
+    document.getElementById('typing-name').textContent = (other === 'alice' ? 'Alice' : 'Lénaïc') + ' écrit...';
+    snap.val() ? ind.classList.add('visible') : ind.classList.remove('visible');
+  });
+}
+
+// ══════════════ CAPSULES ══════════════
+function sealCapsule() {
+  const msg = document.getElementById('cap-msg').value.trim();
+  const from = document.getElementById('cap-from').value;
+  const to = document.getElementById('cap-to').value;
+  const dateVal = document.getElementById('cap-date').value;
+  if (!msg || !dateVal) { showModal('⚠️', 'Oups !', 'Écris un message et choisis une date.', null); return; }
+  db.ref('capsules').push({ msg, from, to, openTs: new Date(dateVal + 'T00:00:00').getTime(), createdAt: Date.now() });
+  document.getElementById('cap-msg').value = '';
+  document.getElementById('cap-date').value = '';
+  showModal('', 'Capsule scellée !', 'Ton message sera révélé le ' + new Date(dateVal).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }) + '.', null);
+}
+
+function watchCapsules() {
+  db.ref('capsules').on('value', snap => {
+    const grid = document.getElementById('caps-grid');
+    const val = snap.val();
+    if (!val) { grid.innerHTML = '<div class="empty-caps"><span>🌌</span>Aucune capsule pour l\'instant...</div>'; return; }
+    const list = Object.entries(val).map(([k,v]) => ({key:k,...v})).sort((a,b) => b.createdAt - a.createdAt);
+    const now = Date.now();
+    grid.innerHTML = '';
+    list.forEach(c => {
+      const isOpen = now >= c.openTs;
+      const toLabel = {both:'Nous deux',alice:'Alice',lenaic:'Lénaïc'}[c.to];
+      const fromLabel = {alice:'Alice',lenaic:'Lénaïc'}[c.from];
+      const dateStr = new Date(c.openTs).toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'});
+      const card = document.createElement('div');
+      card.className = 'cap-card ' + (isOpen ? 'unlocked' : 'locked');
+      card.innerHTML = '<div class="cc-icon">' + (isOpen ? '📬' : '🔒') + '</div>'
+        + '<div class="cc-status">' + (isOpen ? '✓ Ouvert' : 'Scellé') + '</div>'
+        + '<div class="cc-from">' + fromLabel + ' → ' + toLabel + '</div>'
+        + '<div class="cc-date">' + (isOpen ? 'Ouvert le' : "S'ouvre le") + ' ' + dateStr + '</div>'
+        + (isOpen ? '<button class="open-cap-btn">Lire le message</button>' : '<div class="cc-hint">Scellé jusqu\'à cette date</div>');
+      if (isOpen) {
+        card.querySelector('.open-cap-btn').addEventListener('click', () => {
+          showModal('💌', 'Message de ' + fromLabel, 'Envoyé depuis le passé, pour toi.', c.msg);
+        });
+      }
+      grid.appendChild(card);
+    });
+  });
+}
+
+// ══════════════ PROFILES ══════════════
+function watchProfiles() {
+  const other = currentUser === 'alice' ? 'lenaic' : 'alice';
+  // mine
+  db.ref('profiles/' + currentUser).on('value', snap => {
+    const p = snap.val() || {};
+    selectedAv = p.avatar || '😊';
+    const mood = p.mood || 'Ajouter une humeur...';
+    document.getElementById('sb-my-av').textContent = selectedAv;
+    document.getElementById('sb-my-mood').textContent = mood;
+    document.getElementById('mob-my-av').textContent = selectedAv;
+    document.getElementById('mob-my-mood').textContent = mood;
+  });
+  // other
+  db.ref('profiles/' + other).on('value', snap => {
+    const p = snap.val() || {};
+    const av = p.avatar || '😊';
+    const mood = p.mood || 'hors ligne';
+    document.getElementById('sb-other-av').textContent = av;
+    document.getElementById('sb-other-mood').textContent = mood;
+    document.getElementById('mob-other-av').textContent = av;
+    document.getElementById('mob-other-mood').textContent = mood;
+  });
+}
+
+function openPicker() {
+  // preselect current avatar
+  document.querySelectorAll('.av-opt').forEach(x => {
+    x.classList.toggle('sel', x.textContent === selectedAv);
+  });
+  // prefill mood
+  const curMood = document.getElementById('sb-my-mood').textContent;
+  const inp = document.getElementById('mood-input');
+  inp.value = (curMood === 'Ajouter une humeur...' || curMood === 'en ligne') ? '' : curMood;
+  // preselect pill
+  document.querySelectorAll('.mp').forEach(x => x.classList.toggle('sel', x.textContent === curMood));
+  document.getElementById('av-picker').classList.add('open');
+}
+
+function closePicker() {
+  document.getElementById('av-picker').classList.remove('open');
+}
+
+function saveProfile() {
+  const mood = document.getElementById('mood-input').value.trim() || 'en ligne';
+  db.ref('profiles/' + currentUser)
+    .set({ avatar: selectedAv, mood, ts: Date.now() })
+    .then(() => { closePicker(); showToast('Profil mis à jour ✓'); });
+}
+
+
+// ══════════════ CALENDRIER ══════════════
+const CAL_COLORS = ['#7c3aed','#ec4899','#f59e0b','#10b981','#3b82f6','#ef4444','#f97316','#06b6d4'];
+const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let calSelectedKey = null;
+let calSelectedColor = CAL_COLORS[0];
+let allEvents = {};
+
+function initCalendar() {
+  // color pills
+  const cp = document.getElementById('color-pills');
+  CAL_COLORS.forEach((col, i) => {
+    const el = document.createElement('div');
+    el.className = 'color-pill' + (i === 0 ? ' sel' : '');
+    el.style.background = col;
+    el.addEventListener('click', () => {
+      cp.querySelectorAll('.color-pill').forEach(x => x.classList.remove('sel'));
+      el.classList.add('sel');
+      calSelectedColor = col;
+    });
+    cp.appendChild(el);
+  });
+
+  document.getElementById('cal-prev').addEventListener('click', () => {
+    calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar();
+  });
+  document.getElementById('cal-next').addEventListener('click', () => {
+    calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar();
+  });
+  document.getElementById('btn-add-event').addEventListener('click', addCalEvent);
+  document.getElementById('btn-switch-mob3').addEventListener('click', switchUser);
+
+  // enter key in title input
+  document.getElementById('cal-event-title').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); addCalEvent(); }
+  });
+
+  watchCalEvents();
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('cal-month-title').textContent = MONTHS[calMonth] + ' ' + calYear;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const offset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date();
+
+  for (let i = 0; i < offset; i++) {
+    const el = document.createElement('div'); el.className = 'cal-cell empty'; grid.appendChild(el);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const el = document.createElement('div');
+    el.className = 'cal-cell';
+    const isToday = d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear();
+    if (isToday) el.classList.add('today');
+    const key = fmtKey(calYear, calMonth, d);
+    const dayEvs = allEvents[key] || [];
+    const numEl = document.createElement('div'); numEl.className = 'cal-num'; numEl.textContent = d;
+    const dotRow = document.createElement('div'); dotRow.className = 'cal-dot-row';
+    // show up to 3 event chips
+    dayEvs.slice(0, 3).forEach(ev => {
+      const chip = document.createElement('div');
+      chip.className = 'cal-ev-chip';
+      chip.style.background = ev.color || '#7c3aed';
+      chip.textContent = ev.title;
+      dotRow.appendChild(chip);
+    });
+    if (dayEvs.length > 3) {
+      const more = document.createElement('div');
+      more.className = 'cal-ev-chip';
+      more.style.background = '#a0a0b8';
+      more.textContent = '+' + (dayEvs.length - 3);
+      dotRow.appendChild(more);
+    }
+    el.appendChild(numEl); el.appendChild(dotRow);
+    el.addEventListener('click', () => openDayOverlay(d, key));
+    grid.appendChild(el);
+  }
+}
+
+function fmtKey(y, m, d) {
+  return y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+}
+
+function openDayOverlay(d, key) {
+  calSelectedKey = key;
+  const label = d + ' ' + MONTHS[calMonth] + ' ' + calYear;
+  document.getElementById('day-overlay-title').textContent = label;
+  const dayEvs = allEvents[key] || [];
+  document.getElementById('day-overlay-sub').textContent = dayEvs.length + ' événement' + (dayEvs.length > 1 ? 's' : '');
+  document.getElementById('cal-event-title').value = '';
+  renderDayEvents(key);
+  const overlay = document.getElementById('day-overlay');
+  overlay.style.display = 'flex';
+}
+
+function closeDayOverlay() {
+  document.getElementById('day-overlay').style.display = 'none';
+  calSelectedKey = null;
+}
+
+function renderDayEvents(key) {
+  const list = document.getElementById('cal-events-list');
+  const dayEvs = allEvents[key] || [];
+  const sub = document.getElementById('day-overlay-sub');
+  if (sub) sub.textContent = dayEvs.length + ' événement' + (dayEvs.length > 1 ? 's' : '');
+
+  if (dayEvs.length === 0) {
+    list.innerHTML = '<div class="cal-no-events">Aucun événement ce jour</div>';
+    return;
+  }
+  list.innerHTML = '';
+  dayEvs.forEach(ev => {
+    const item = document.createElement('div'); item.className = 'cal-event-item';
+    item.innerHTML = '<div class="cal-event-dot" style="background:' + (ev.color||'#7c3aed') + '"></div>'
+      + '<div class="cal-event-info"><div class="cal-event-name">' + ev.title + '</div>'
+      + '<div class="cal-event-meta">Ajouté par ' + (ev.by === 'alice' ? 'Alice' : 'Lénaïc') + '</div></div>'
+      + '<button class="cal-del-btn">✕</button>';
+    item.querySelector('.cal-del-btn').addEventListener('click', () => {
+      db.ref('calendar/' + key + '/' + ev.id).remove();
+      showToast('Événement supprimé');
+    });
+    list.appendChild(item);
+  });
+}
+
+function addCalEvent() {
+  const title = document.getElementById('cal-event-title').value.trim();
+  if (!title || !calSelectedKey) return;
+  db.ref('calendar/' + calSelectedKey).push({ title, color: calSelectedColor, by: currentUser, ts: Date.now() });
+  document.getElementById('cal-event-title').value = '';
+  showToast('Événement ajouté ✓');
+}
+
+function watchCalEvents() {
+  db.ref('calendar').on('value', snap => {
+    allEvents = {};
+    const val = snap.val();
+    if (val) {
+      Object.entries(val).forEach(([key, evs]) => {
+        allEvents[key] = Object.entries(evs).map(([id, ev]) => ({id,...ev})).sort((a,b) => a.ts - b.ts);
+      });
+    }
+    renderCalendar();
+    if (calSelectedKey) renderDayEvents(calSelectedKey);
+  });
+}
+
+// ══════════════ VIEWS ══════════════
+function switchView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  ['chat','capsule','cal'].forEach(n => {
+    const pc = document.getElementById('pc-nav-' + n);
+    const mob = document.getElementById('mob-nav-' + n);
+    const active = n === v;
+    if (pc) pc.classList.toggle('active', active);
+    if (mob) mob.classList.toggle('active', active);
+  });
+}
+
+// ══════════════ MODAL / TOAST ══════════════
+function showModal(icon, title, body, msg) {
+  document.getElementById('modal-icon').textContent = icon;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').textContent = body;
+  const m = document.getElementById('modal-msg');
+  if (msg) { m.textContent = msg; m.style.display = 'block'; } else { m.style.display = 'none'; }
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
