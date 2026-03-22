@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Alice & Lénaïc</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyBoRWDLl1Q1imn-HhneCrNsiGJijSXuIPQ",
+    authDomain: "mess-481b1.firebaseapp.com",
+    databaseURL: "https://mess-481b1-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "mess-481b1",
+    storageBucket: "mess-481b1.firebasestorage.app",
+    messagingSenderId: "363770777425",
+    appId: "1:363770777425:web:c53fd19f0ae0e769cb4d70"
+  });
+  window.db = firebase.database();
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lilita+One&display=swap');
+
+:root {
+  --v:  #2d0a4e;
+  --v2: #4a1278;
+  --v3: #7c3aed;
+  --light: #f3eeff;
+  --white: #ffffff;
+  --gray:  #a0a0b8;
+  --border:#e2ddf0;
+  --black: #0f0f0f;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { height: 100%; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--white);
+  color: var(--black);
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ══════════ LOGIN ══════════ */
+#login {
+  position: fixed; inset: 0;
+  background: var(--white);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0; z-index: 999;
+  padding: 24px;
+}
+.login-logo {
+  font-family: 'Lilita One', cursive;
+  font-size: 42px; color: var(--v);
+  margin-bottom: 6px; letter-spacing: -1px;
+  text-align: center;
+}
+.login-sub {
+  font-size: 13px; font-weight: 700; color: var(--gray);
+  margin-bottom: 48px; letter-spacing: 0.5px;
+}
+.login-who {
+  font-size: 10px; font-weight: 900; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--gray); margin-bottom: 16px;
+}
+.login-cards { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.lcard {
+  width: 150px; padding: 28px 16px;
+  border: 2px solid var(--border); border-radius: 22px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  cursor: pointer; background: var(--white); transition: all 0.2s;
+}
+.lcard:hover, .lcard:active {
+  border-color: var(--v3); background: var(--light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(124,58,237,0.12);
+}
+.lcard-av {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--v); color: white;
+  font-family: 'Lilita One', cursive; font-size: 26px;
+  display: flex; align-items: center; justify-content: center;
+}
+.lcard-name { font-family: 'Lilita One', cursive; font-size: 18px; color: var(--v); }
+.lcard-btn {
+  width: 100%; padding: 9px;
+  background: var(--v); color: white; border: none;
+  border-radius: 50px; font-family: 'Nunito', sans-serif;
+  font-weight: 800; font-size: 12px; cursor: pointer;
+}
+.lcard:hover .lcard-btn, .lcard:active .lcard-btn { background: var(--v3); }
+
+/* ══════════ LAYOUT ══════════ */
+/* --- PC: sidebar gauche --- */
+.sidebar {
+  width: 240px; min-width: 240px; height: 100vh;
+  background: var(--v);
+  display: flex; flex-direction: column;
+  flex-shrink: 0;
+}
+.sb-head {
+  padding: 28px 20px 22px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.sb-logo { font-family: 'Lilita One', cursive; font-size: 20px; color: white; margin-bottom: 2px; }
+.sb-sub { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); margin-bottom: 14px; }
+.sb-who { display: flex; align-items: center; gap: 8px; }
+.sb-av {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3);
+  color: white; font-family: 'Lilita One', cursive; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sb-who-name { font-weight: 800; font-size: 14px; color: white; }
+.sb-who-status { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 700; }
+
+.sb-nav { flex: 1; padding: 16px 10px; display: flex; flex-direction: column; gap: 3px; }
+.sb-nav-label {
+  font-size: 9px; font-weight: 900; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(255,255,255,0.3);
+  padding: 0 10px; margin: 4px 0 6px;
+}
+.nb {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 14px;
+  color: rgba(255,255,255,0.55); border: none; background: none;
+  cursor: pointer; width: 100%; text-align: left; transition: all 0.15s;
+}
+.nb:hover { background: rgba(255,255,255,0.08); color: white; }
+.nb.active { background: rgba(255,255,255,0.15); color: white; }
+.nb-icon { font-size: 17px; width: 22px; text-align: center; }
+.live-dot {
+  margin-left: auto; width: 7px; height: 7px; border-radius: 50%;
+  background: #4ade80; box-shadow: 0 0 5px #4ade80;
+}
+.live-dot.off { background: #f87171; box-shadow: 0 0 5px #f87171; }
+
+.sb-foot {
+  padding: 12px 10px 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.switch-btn {
+  width: 100%; padding: 9px 12px;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px; color: rgba(255,255,255,0.65);
+  font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 12px;
+  cursor: pointer; transition: all 0.15s; text-align: left;
+  display: flex; align-items: center; gap: 6px;
+}
+.switch-btn:hover { background: rgba(255,255,255,0.12); color: white; }
+
+/* main content area */
+.main {
+  flex: 1; height: 100vh;
+  display: flex; flex-direction: column;
+  overflow: hidden; min-width: 0;
+}
+
+/* ══════════ VIEWS ══════════ */
+.view { display: none; flex-direction: column; flex: 1; overflow: hidden; min-height: 0; }
+.view.active { display: flex; }
+
+/* topbar */
+.topbar {
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  background: var(--white); flex-shrink: 0;
+}
+.topbar-title { font-family: 'Lilita One', cursive; font-size: 18px; color: var(--v); }
+.topbar-sub { font-size: 11px; font-weight: 700; color: var(--gray); margin-top: 1px; }
+.topbar-right { margin-left: auto; }
+
+/* sticker toggle btn */
+.sticker-toggle {
+  background: none; border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 6px 12px;
+  cursor: pointer; font-size: 14px; color: var(--v);
+  font-weight: 800; font-family: 'Nunito', sans-serif;
+}
+
+/* ══════════ MESSAGES ══════════ */
+#messages {
+  flex: 1; overflow-y: auto;
+  padding: 20px 18px;
+  display: flex; flex-direction: column; gap: 12px;
+  background: var(--white);
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+#messages::-webkit-scrollbar { width: 3px; }
+#messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+.msg-group { display: flex; flex-direction: column; gap: 2px; }
+.msg-group.me { align-items: flex-end; }
+.msg-group.other { align-items: flex-start; }
+.msg-sender {
+  font-size: 10px; font-weight: 900; letter-spacing: 0.5px;
+  text-transform: uppercase; padding: 0 12px; margin-bottom: 3px;
+}
+.other .msg-sender { color: var(--gray); }
+.me .msg-sender { color: var(--v3); }
+
+.bubble {
+  max-width: 72%; padding: 10px 15px;
+  font-size: 15px; font-weight: 600; line-height: 1.5;
+  word-break: break-word;
+  animation: pop 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes pop { from{transform:scale(0.75);opacity:0} to{transform:scale(1);opacity:1} }
+
+.other .bubble {
+  background: var(--light); border: 1px solid var(--border);
+  border-radius: 4px 18px 18px 18px; color: var(--v);
+}
+.me .bubble {
+  background: var(--v); color: white;
+  border-radius: 18px 4px 18px 18px;
+}
+.bubble .ts {
+  font-size: 10px; font-weight: 700; opacity: 0.4;
+  display: block; margin-top: 3px;
+}
+.other .bubble .ts { text-align: left; }
+.me .bubble .ts { text-align: right; }
+
+.date-sep {
+  text-align: center; font-size: 11px; font-weight: 800;
+  color: var(--gray); display: flex; align-items: center; gap: 10px; padding: 2px 0;
+}
+.date-sep::before,.date-sep::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* typing */
+.typing-wrap { display: none; align-items: center; gap: 8px; padding: 0 18px 6px; flex-shrink: 0; }
+.typing-wrap.visible { display: flex; }
+.typing-dots {
+  background: var(--light); border: 1px solid var(--border);
+  border-radius: 4px 14px 14px 14px;
+  padding: 9px 14px; display: flex; gap: 4px; align-items: center;
+}
+.td { width: 6px; height: 6px; border-radius: 50%; background: var(--v3); animation: bounce 1.2s ease-in-out infinite; }
+.td:nth-child(2){animation-delay:.2s} .td:nth-child(3){animation-delay:.4s}
+@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+.typing-name { font-size: 11px; font-weight: 800; color: var(--gray); }
+
+/* input */
+.input-area {
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--border);
+  background: var(--white);
+  flex-shrink: 0;
+}
+.emoji-strip {
+  display: flex; gap: 2px; padding-bottom: 8px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.emoji-strip::-webkit-scrollbar { display: none; }
+.ep {
+  font-size: 20px; cursor: pointer; padding: 2px 4px;
+  border-radius: 6px; flex-shrink: 0; transition: transform 0.1s;
+}
+.ep:active { transform: scale(1.3); }
+.input-row { display: flex; gap: 8px; align-items: flex-end; }
+#msg-input {
+  flex: 1; border: 1.5px solid var(--border); border-radius: 20px;
+  padding: 10px 16px; font-family: 'Nunito', sans-serif;
+  font-size: 15px; font-weight: 600; outline: none;
+  resize: none; max-height: 100px; line-height: 1.4;
+  color: var(--black); background: var(--light);
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+#msg-input:focus { border-color: var(--v3); }
+#msg-input::placeholder { color: var(--gray); }
+.send-btn {
+  width: 44px; height: 44px; border-radius: 50%; border: none;
+  background: var(--v); color: white; font-size: 20px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.15s, transform 0.1s;
+  -webkit-appearance: none;
+}
+.send-btn:active { background: var(--v3); transform: scale(0.93); }
+
+/* sticker popup */
+.sticker-popup {
+  position: fixed;
+  background: var(--white); border-radius: 18px;
+  padding: 12px; box-shadow: 0 8px 32px rgba(45,10,78,0.18);
+  border: 1.5px solid var(--border);
+  display: none; grid-template-columns: repeat(6,1fr); gap: 6px;
+  z-index: 300;
+  /* position set by JS */
+}
+.sticker-popup.open { display: grid; }
+.so { font-size: 22px; cursor: pointer; text-align: center; padding: 5px; border-radius: 8px; transition: transform 0.1s; }
+.so:active { transform: scale(1.3); background: var(--light); }
+
+/* ══════════ CAPSULE VIEW ══════════ */
+.cap-inner {
+  flex: 1; overflow-y: auto; padding: 20px 18px;
+  display: flex; flex-direction: column; gap: 20px;
+  background: var(--white);
+  -webkit-overflow-scrolling: touch;
+}
+.cap-inner::-webkit-scrollbar { width: 3px; }
+.cap-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+.card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 18px; padding: 22px 20px;
+}
+.card-title {
+  font-family: 'Lilita One', cursive; font-size: 16px;
+  color: var(--v); margin-bottom: 16px;
+}
+.cap-form { display: flex; flex-direction: column; gap: 12px; }
+.cap-form textarea {
+  width: 100%; border: 1.5px solid var(--border); border-radius: 14px;
+  padding: 12px 16px; font-family: 'Nunito', sans-serif;
+  font-size: 15px; font-weight: 600; color: var(--black);
+  background: var(--light); outline: none; resize: vertical;
+  min-height: 90px; line-height: 1.5; transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.cap-form textarea:focus { border-color: var(--v3); }
+.cap-form textarea::placeholder { color: var(--gray); }
+.form-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.form-field { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 110px; }
+.form-label { font-size: 9px; font-weight: 900; color: var(--gray); letter-spacing: 1.5px; text-transform: uppercase; }
+.form-field select, .form-field input[type="date"] {
+  border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 9px 12px; font-family: 'Nunito', sans-serif;
+  font-size: 13px; font-weight: 700; color: var(--black);
+  background: var(--light); outline: none; transition: border-color 0.2s;
+  -webkit-appearance: none; width: 100%;
+}
+.form-field select:focus, .form-field input[type="date"]:focus { border-color: var(--v3); }
+.seal-btn {
+  background: var(--v); color: white; border: none;
+  border-radius: 50px; padding: 12px 24px;
+  font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 14px;
+  cursor: pointer; transition: background 0.15s; align-self: flex-start;
+  -webkit-appearance: none;
+}
+.seal-btn:active { background: var(--v3); }
+
+.caps-grid { display: flex; flex-direction: column; gap: 12px; }
+.cap-card {
+  border: 1.5px solid var(--border); border-radius: 14px;
+  padding: 16px 18px; background: var(--white);
+}
+.cap-card.locked { border-left: 4px solid var(--v2); }
+.cap-card.unlocked { border-left: 4px solid #4ade80; }
+.cap-card-icon { font-size: 26px; margin-bottom: 6px; }
+.cap-card-status {
+  font-size: 9px; font-weight: 900; letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 5px;
+}
+.locked .cap-card-status { color: var(--v2); }
+.unlocked .cap-card-status { color: #16a34a; }
+.cap-card-from { font-size: 13px; font-weight: 800; color: var(--v); margin-bottom: 2px; }
+.cap-card-date { font-size: 12px; font-weight: 700; color: var(--gray); }
+.cap-card-hint { margin-top: 8px; font-size: 12px; color: var(--gray); font-style: italic; }
+.open-cap-btn {
+  margin-top: 12px; width: 100%;
+  background: var(--v); color: white; border: none; border-radius: 50px;
+  padding: 9px; font-family: 'Nunito', sans-serif;
+  font-weight: 900; font-size: 13px; cursor: pointer;
+  -webkit-appearance: none;
+}
+.open-cap-btn:active { background: var(--v3); }
+.empty-caps {
+  text-align: center; padding: 32px;
+  color: var(--gray); font-weight: 700; font-size: 14px;
+}
+.empty-caps span { font-size: 36px; display: block; margin-bottom: 8px; }
+
+/* ══════════ MOBILE BOTTOM NAV ══════════ */
+.bottom-nav {
+  display: none; /* visible only on mobile */
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--v);
+  height: 60px;
+  z-index: 200;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.bottom-nav-inner {
+  display: flex; height: 100%;
+}
+.bnb {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  border: none; background: none; cursor: pointer;
+  color: rgba(255,255,255,0.5); font-family: 'Nunito', sans-serif;
+  font-weight: 800; font-size: 10px; transition: color 0.15s;
+}
+.bnb.active { color: white; }
+.bnb-icon { font-size: 20px; }
+
+/* switch btn in topbar on mobile */
+.mobile-switch {
+  display: none;
+  background: none; border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 6px 10px;
+  cursor: pointer; font-size: 12px; color: var(--gray);
+  font-weight: 800; font-family: 'Nunito', sans-serif;
+}
+
+/* ══════════ MODAL ══════════ */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(15,15,15,0.4);
+  backdrop-filter: blur(6px); z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  padding: 20px;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-box {
+  background: var(--white); border-radius: 22px; padding: 30px 24px;
+  max-width: 400px; width: 100%;
+  box-shadow: 0 20px 60px rgba(45,10,78,0.2);
+  border: 1.5px solid var(--border);
+  transform: translateY(16px) scale(0.96);
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+.modal-icon { font-size: 40px; text-align: center; margin-bottom: 10px; }
+.modal-title { font-family: 'Lilita One', cursive; font-size: 20px; color: var(--v); text-align: center; margin-bottom: 8px; }
+.modal-body { font-size: 14px; font-weight: 600; color: var(--gray); text-align: center; line-height: 1.6; margin-bottom: 16px; }
+.modal-msg {
+  background: var(--light); border-radius: 14px; padding: 14px 18px;
+  font-size: 15px; font-weight: 600; color: var(--v);
+  line-height: 1.65; margin-bottom: 18px;
+  border: 1px solid var(--border); white-space: pre-wrap;
+}
+.modal-close {
+  width: 100%; background: var(--v); color: white; border: none;
+  border-radius: 50px; padding: 13px; font-family: 'Nunito', sans-serif;
+  font-weight: 900; font-size: 15px; cursor: pointer;
+  -webkit-appearance: none;
+}
+.modal-close:active { background: var(--v3); }
+
+/* TOAST */
+#toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(10px);
+  background: var(--v); color: white; border-radius: 12px; padding: 9px 18px;
+  font-size: 13px; font-weight: 800; white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(45,10,78,0.25); z-index: 800;
+  opacity: 0; transition: all 0.25s; pointer-events: none;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ══════════ RESPONSIVE ══════════ */
+@media (max-width: 640px) {
+  /* hide desktop sidebar */
+  .sidebar { display: none; }
+
+  /* show mobile bottom nav */
+  .bottom-nav { display: block; }
+
+  /* show mobile switch btn in topbar */
+  .mobile-switch { display: block; }
+
+  /* toast above bottom nav */
+  #toast { bottom: 72px; }
+
+  /* input area padding for bottom nav */
+  .input-area { padding-bottom: env(safe-area-inset-bottom, 12px); padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+
+  /* full height minus topbar and bottom nav */
+  .main { height: 100vh; padding-bottom: 60px; }
+
+  .bubble { max-width: 82%; }
+  #messages { padding: 14px 12px; }
+  .cap-inner { padding: 16px 14px; }
+  .topbar { padding: 12px 16px; }
+  .sticker-popup { left: 8px !important; right: 8px !important; bottom: 120px !important; width: auto !important; grid-template-columns: repeat(7,1fr); }
+}
+
+/* ══════════ PROFIL ══════════ */
+.sb-profile {
+  padding: 16px 20px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 16px;
+}
+.sb-profile-label {
+  font-size: 9px; font-weight: 900; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(255,255,255,0.3);
+  margin-bottom: 10px;
+}
+.profile-card {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 12px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.profile-row { display: flex; align-items: center; gap: 10px; }
+.profile-big-av {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3);
+  font-size: 24px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.15s; flex-shrink: 0;
+}
+.profile-big-av:hover { background: rgba(255,255,255,0.22); }
+.profile-info { flex: 1; min-width: 0; }
+.profile-name { font-family: 'Lilita One', cursive; font-size: 15px; color: white; }
+.profile-mood-display {
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.6);
+  margin-top: 2px; cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+}
+.profile-mood-display:hover { color: rgba(255,255,255,0.9); }
+.mood-edit-btn {
+  font-size: 10px; background: none; border: none;
+  color: rgba(255,255,255,0.4); cursor: pointer; padding: 0;
+}
+
+/* other user's profile strip */
+.other-profile {
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.other-profile-label {
+  font-size: 9px; font-weight: 900; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 8px;
+}
+.other-card {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; padding: 10px 12px;
+}
+.other-av {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2);
+  font-size: 20px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.other-info { flex: 1; min-width: 0; }
+.other-name { font-size: 13px; font-weight: 800; color: white; }
+.other-mood { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 700; margin-top: 1px; }
+
+/* avatar picker popup */
+.av-picker {
+  position: fixed; inset: 0;
+  background: rgba(15,15,15,0.45); backdrop-filter: blur(6px);
+  z-index: 600; display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  padding: 20px;
+}
+.av-picker.open { opacity: 1; pointer-events: all; }
+.av-picker-box {
+  background: var(--white); border-radius: 22px; padding: 24px;
+  max-width: 360px; width: 100%;
+  box-shadow: 0 20px 60px rgba(45,10,78,0.2);
+  transform: translateY(12px) scale(0.96);
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.av-picker.open .av-picker-box { transform: translateY(0) scale(1); }
+.av-picker-title {
+  font-family: 'Lilita One', cursive; font-size: 18px;
+  color: var(--v); margin-bottom: 16px; text-align: center;
+}
+.av-grid {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;
+  margin-bottom: 16px;
+}
+.av-opt {
+  font-size: 28px; text-align: center; padding: 8px 4px;
+  border-radius: 12px; cursor: pointer; border: 2px solid transparent;
+  transition: all 0.15s;
+}
+.av-opt:hover, .av-opt.selected { background: var(--light); border-color: var(--v3); }
+
+/* mood picker */
+.mood-section { margin-top: 12px; border-top: 1px solid var(--border); padding-top: 14px; }
+.mood-label {
+  font-size: 10px; font-weight: 900; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gray); margin-bottom: 10px;
+}
+.mood-input-row { display: flex; gap: 8px; align-items: center; }
+#mood-input {
+  flex: 1; border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 9px 14px; font-family: 'Nunito', sans-serif;
+  font-size: 14px; font-weight: 700; color: var(--black);
+  background: var(--light); outline: none;
+}
+#mood-input:focus { border-color: var(--v3); }
+#mood-input::placeholder { color: var(--gray); }
+.mood-quick {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;
+  max-height: 130px; overflow-y: auto; padding-right: 4px;
+}
+.mood-quick::-webkit-scrollbar { width: 3px; }
+.mood-quick::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+.mq {
+  font-size: 12px; padding: 5px 10px; border-radius: 50px;
+  background: var(--light); border: 1.5px solid var(--border);
+  cursor: pointer; font-weight: 700; color: var(--v);
+  transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+}
+.mq:hover, .mq:active { background: var(--v); color: white; border-color: var(--v); }
+.av-save-btn {
+  width: 100%; background: var(--v); color: white; border: none;
+  border-radius: 50px; padding: 12px; font-family: 'Nunito', sans-serif;
+  font-weight: 900; font-size: 14px; cursor: pointer; margin-top: 16px;
+}
+.av-save-btn:active { background: var(--v3); }
+
+/* mobile profile bar (shown above bottom nav) */
+.mob-profile-bar {
+  display: none;
+  background: var(--v); padding: 10px 16px;
+  align-items: center; gap: 10px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+.mob-my-av { font-size: 26px; cursor: pointer; }
+.mob-my-info { flex: 1; }
+.mob-my-name { font-size: 12px; font-weight: 800; color: white; }
+.mob-my-mood { font-size: 11px; color: rgba(255,255,255,0.55); cursor: pointer; }
+.mob-other-av { font-size: 22px; opacity: 0.8; }
+.mob-other-mood { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 700; }
+
+@media (max-width: 640px) {
+  .mob-profile-bar { display: flex; }
+  .main { padding-bottom: 104px; } /* bottomnav 60 + profile bar 44 */
+  #toast { bottom: 116px; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-icon" id="modal-icon"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-msg" id="modal-msg" style="display:none"></div>
+    <button class="modal-close" onclick="closeModal()">Fermer</button>
+  </div>
+</div>
+
+<!-- STICKER POPUP -->
+<div class="sticker-popup" id="sticker-popup"></div>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-logo">Alice & Lénaïc</div>
+  <div class="login-sub">votre espace privé</div>
+  <div class="login-who">je suis...</div>
+  <div class="login-cards">
+    <div class="lcard" onclick="login('alice')">
+      <div class="lcard-av">A</div>
+      <div class="lcard-name">Alice</div>
+      <button class="lcard-btn">C'est moi →</button>
+    </div>
+    <div class="lcard" onclick="login('lenaic')">
+      <div class="lcard-av">L</div>
+      <div class="lcard-name">Lénaïc</div>
+      <button class="lcard-btn">C'est moi →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PC SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-head">
+    <div class="sb-logo">Alice & Lénaïc</div>
+    <div class="sb-sub">espace privé · <span id="sb-status">connexion...</span></div>
+  </div>
+
+  <!-- Mon profil -->
+  <div class="sb-profile">
+    <div class="sb-profile-label">Mon profil</div>
+    <div class="profile-card">
+      <div class="profile-row">
+        <div class="profile-big-av" id="my-av" onclick="openAvPicker()">😊</div>
+        <div class="profile-info">
+          <div class="profile-name" id="sb-name">—</div>
+          <div class="profile-mood-display" onclick="openAvPicker()">
+            <span id="my-mood-text">Ajouter une humeur...</span>
+            <button class="mood-edit-btn">✏️</button>
+          </div>
+        </div>
+        <span class="live-dot" id="live-dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profil de l'autre -->
+  <div class="other-profile">
+    <div class="other-profile-label">L'autre</div>
+    <div class="other-card">
+      <div class="other-av" id="other-av">😊</div>
+      <div class="other-info">
+        <div class="other-name" id="other-name">—</div>
+        <div class="other-mood" id="other-mood">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sb-nav">
+    <div class="sb-nav-label">Espaces</div>
+    <button class="nb active" id="pc-nav-chat" onclick="switchView('chat')">
+      <span class="nb-icon">💬</span> Messagerie
+    </button>
+    <button class="nb" id="pc-nav-capsule" onclick="switchView('capsule')">
+      <span class="nb-icon">⏳</span> Capsule temporelle
+    </button>
+  </div>
+  <div class="sb-foot">
+    <button class="switch-btn" onclick="switchUser()">↩ Changer d'utilisateur</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- CHAT VIEW -->
+  <div class="view active" id="view-chat">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Messages</div>
+        <div class="topbar-sub" id="msg-count">chargement...</div>
+      </div>
+      <div class="topbar-right" style="display:flex;gap:8px;align-items:center">
+        <button class="sticker-toggle" onclick="toggleStickers()">Stickers</button>
+        <button class="mobile-switch" onclick="switchUser()">↩</button>
+      </div>
+    </div>
+    <div id="messages"></div>
+    <div class="typing-wrap" id="typing">
+      <div class="typing-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div>
+      <div class="typing-name" id="typing-name">…</div>
+    </div>
+    <div class="input-area">
+      <div class="emoji-strip" id="emoji-strip"></div>
+      <div class="input-row">
+        <textarea id="msg-input" rows="1" placeholder="Écris quelque chose..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" onclick="sendMsg()">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPSULE VIEW -->
+  <div class="view" id="view-capsule">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Capsule temporelle</div>
+        <div class="topbar-sub">un message dans le futur</div>
+      </div>
+      <div class="topbar-right">
+        <button class="mobile-switch" onclick="switchUser()">↩</button>
+      </div>
+    </div>
+    <div class="cap-inner">
+      <div class="card">
+        <div class="card-title">⏳ Écrire une capsule</div>
+        <div class="cap-form">
+          <textarea id="cap-msg" placeholder="Ton message pour le futur..."></textarea>
+          <div class="form-row">
+            <div class="form-field">
+              <div class="form-label">De</div>
+              <select id="cap-from">
+                <option value="alice">Alice</option>
+                <option value="lenaic">Lénaïc</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <div class="form-label">Pour</div>
+              <select id="cap-to">
+                <option value="both">Nous deux</option>
+                <option value="alice">Alice</option>
+                <option value="lenaic">Lénaïc</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <div class="form-label">Ouvrir le</div>
+              <input type="date" id="cap-date">
+            </div>
+          </div>
+          <button class="seal-btn" onclick="sealCapsule()">⏳ Sceller</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📦 Capsules</div>
+        <div class="caps-grid" id="caps-grid">
+          <div class="empty-caps"><span>🌌</span>Aucune capsule pour l'instant...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bnb active" id="mob-nav-chat" onclick="switchView('chat')">
+      <span class="bnb-icon">💬</span>Messages
+    </button>
+    <button class="bnb" id="mob-nav-capsule" onclick="switchView('capsule')">
+      <span class="bnb-icon">⏳</span>Capsule
+    </button>
+  </div>
+</div>
+
+<script>
+let currentUser = null;
+const EMOJIS = ['😂','🥰','😭','✨','💫','🔥','🤩','👀','🫶','😮‍💨','🫠','💀','🥳','🤭','👑','🚀'];
+const STICKERS = ['🎉','🥳','😍','🤭','💀','🫠','🤡','🫶','👁️','💋','👑','🪄','🌈','🎭','⭐','🚀','🦄','🍓','🫧','🌊','🍀','🎪'];
+
+// ── LOGIN ──
+function login(user) {
+  currentUser = user;
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('sb-av').textContent = user === 'alice' ? 'A' : 'L';
+  document.getElementById('sb-name').textContent = user === 'alice' ? 'Alice' : 'Lénaïc';
+  document.getElementById('cap-from').value = user;
+  document.getElementById('mob-my-name').textContent = user === 'alice' ? 'Alice' : 'Lénaïc';
+  startApp();
+}
+
+function switchUser() {
+  currentUser = null;
+  document.getElementById('login').style.display = 'flex';
+  document.getElementById('messages').innerHTML = '';
+  db.ref('messages').off();
+  db.ref('typing').off();
+  db.ref('capsules').off();
+}
+
+// ── START ──
+function startApp() {
+  // emoji strip
+  const strip = document.getElementById('emoji-strip');
+  strip.innerHTML = '';
+  EMOJIS.forEach(e => {
+    const el = document.createElement('span');
+    el.className = 'ep'; el.textContent = e;
+    el.onclick = () => insertEmoji(e);
+    strip.appendChild(el);
+  });
+  // stickers
+  const popup = document.getElementById('sticker-popup');
+  popup.innerHTML = '';
+  STICKERS.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'so'; el.textContent = s;
+    el.onclick = () => { sendSticker(s); popup.classList.remove('open'); };
+    popup.appendChild(el);
+  });
+  document.getElementById('cap-date').min = new Date().toISOString().split('T')[0];
+  listenConnection();
+  listenMessages();
+  listenTyping();
+  listenCapsules();
+  listenProfiles();
+}
+
+// ── CONNEXION ──
+function listenConnection() {
+  db.ref('.info/connected').on('value', snap => {
+    const ok = snap.val();
+    document.querySelectorAll('.live-dot').forEach(d => d.className = 'live-dot' + (ok ? '' : ' off'));
+    if (document.getElementById('sb-status'))
+      document.getElementById('sb-status').textContent = ok ? 'en ligne' : 'reconnexion...';
+    showToast(ok ? '✓ Connecté' : '✗ Connexion perdue');
+  });
+}
+
+// ── MESSAGES ──
+function listenMessages() {
+  const ref = db.ref('messages').limitToLast(100);
+  let firstLoad = true;
+  ref.on('value', snap => {
+    if (!firstLoad) return;
+    firstLoad = false;
+    document.getElementById('messages').innerHTML = '';
+    addDateSep(new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' }));
+    const val = snap.val();
+    if (val) {
+      Object.values(val).forEach(m => appendBubble(m.user, m.text, m.time, false));
+      const c = Object.keys(val).length;
+      document.getElementById('msg-count').textContent = `${c} message${c>1?'s':''}`;
+    } else {
+      document.getElementById('msg-count').textContent = 'Aucun message encore';
+    }
+  });
+  setTimeout(() => { firstLoad = false; }, 800);
+  ref.on('child_added', snap => {
+    if (firstLoad) return;
+    const m = snap.val();
+    appendBubble(m.user, m.text, m.time, true);
+    db.ref('messages').once('value', s => {
+      const c = s.numChildren();
+      document.getElementById('msg-count').textContent = `${c} message${c>1?'s':''}`;
+    });
+  });
+}
+
+function appendBubble(user, text, timeStr, animate) {
+  const msgs = document.getElementById('messages');
+  const isMe = user === currentUser;
+  const g = document.createElement('div');
+  g.className = 'msg-group ' + (isMe ? 'me' : 'other');
+  g.innerHTML = `
+    <div class="msg-sender">${user === 'alice' ? 'Alice' : 'Lénaïc'}</div>
+    <div class="bubble"${animate ? '' : ' style="animation:none"'}>
+      ${text}<span class="ts">${timeStr}</span>
+    </div>
+  `;
+  msgs.appendChild(g);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addDateSep(text) {
+  const el = document.createElement('div');
+  el.className = 'date-sep'; el.textContent = text;
+  document.getElementById('messages').appendChild(el);
+}
+
+function sendMsg() {
+  const input = document.getElementById('msg-input');
+  const text = input.value.trim(); if (!text) return;
+  const time = new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+  db.ref('messages').push({ user: currentUser, text, time, ts: Date.now() });
+  input.value = ''; input.style.height = 'auto';
+  db.ref('typing/' + currentUser).set(false);
+}
+
+function sendSticker(s) {
+  const time = new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+  db.ref('messages').push({ user: currentUser, text: `<span style="font-size:36px">${s}</span>`, time, ts: Date.now() });
+}
+
+// ── TYPING ──
+let typingTimer = null;
+function onTyping() {
+  if (!currentUser) return;
+  db.ref('typing/' + currentUser).set(true);
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(() => db.ref('typing/' + currentUser).set(false), 2500);
+}
+
+function listenTyping() {
+  db.ref('typing').off();
+  const other = currentUser === 'alice' ? 'lenaic' : 'alice';
+  const otherName = other === 'alice' ? 'Alice' : 'Lénaïc';
+  db.ref('typing/' + other).on('value', snap => {
+    const ind = document.getElementById('typing');
+    document.getElementById('typing-name').textContent = `${otherName} écrit...`;
+    snap.val() ? ind.classList.add('visible') : ind.classList.remove('visible');
+  });
+}
+
+// ── CAPSULES ──
+function sealCapsule() {
+  const msg = document.getElementById('cap-msg').value.trim();
+  const from = document.getElementById('cap-from').value;
+  const to = document.getElementById('cap-to').value;
+  const dateVal = document.getElementById('cap-date').value;
+  if (!msg || !dateVal) {
+    showModal('⚠️', 'Oups !', 'Écris un message et choisis une date.', null);
+    return;
+  }
+  db.ref('capsules').push({ msg, from, to, openTs: new Date(dateVal + 'T00:00:00').getTime(), createdAt: Date.now() });
+  document.getElementById('cap-msg').value = '';
+  document.getElementById('cap-date').value = '';
+  const d = new Date(dateVal).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+  showModal('⏳', 'Capsule scellée !', `Ton message sera révélé le ${d}.`, null);
+}
+
+function listenCapsules() {
+  db.ref('capsules').on('value', snap => {
+    const grid = document.getElementById('caps-grid');
+    const val = snap.val();
+    if (!val) {
+      grid.innerHTML = '<div class="empty-caps"><span>🌌</span>Aucune capsule pour l\'instant...</div>';
+      return;
+    }
+    const list = Object.entries(val).map(([k,v]) => ({key:k,...v})).sort((a,b) => b.createdAt - a.createdAt);
+    const now = Date.now();
+    grid.innerHTML = '';
+    list.forEach(c => {
+      const isOpen = now >= c.openTs;
+      const toLabel = {both:'Nous deux', alice:'Alice', lenaic:'Lénaïc'}[c.to];
+      const fromLabel = {alice:'Alice', lenaic:'Lénaïc'}[c.from];
+      const dateStr = new Date(c.openTs).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+      const card = document.createElement('div');
+      card.className = 'cap-card ' + (isOpen ? 'unlocked' : 'locked');
+      card.innerHTML = `
+        <div class="cap-card-icon">${isOpen ? '📬' : '🔒'}</div>
+        <div class="cap-card-status">${isOpen ? '✓ Ouvert' : 'Scellé'}</div>
+        <div class="cap-card-from">${fromLabel} → ${toLabel}</div>
+        <div class="cap-card-date">${isOpen ? 'Ouvert le' : 'S\'ouvre le'} ${dateStr}</div>
+        ${isOpen
+          ? `<button class="open-cap-btn" onclick='readCapsule(${JSON.stringify(c)})'>Lire le message</button>`
+          : `<div class="cap-card-hint">Scellé jusqu'à cette date</div>`
+        }
+      `;
+      grid.appendChild(card);
+    });
+  });
+}
+
+function readCapsule(c) {
+  const fromLabel = {alice:'Alice', lenaic:'Lénaïc'}[c.from];
+  showModal('💌', `Message de ${fromLabel}`, 'Envoyé depuis le passé, pour toi.', c.msg);
+}
+
+
+// ══════════════════════════════════
+// PROFIL — avatar + humeur
+// ══════════════════════════════════
+const AVATARS = ['😊','🥰','😎','🤩','😜','🥳','😇','🤓','😏','🥺','😌','🤗','🫶','💜','⭐','🦋','🌸','🌙','✨','🎀','🦄','🍀'];
+let selectedAv = '😊';
+
+function initAvatarPicker() {
+  const grid = document.getElementById('av-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  AVATARS.forEach(a => {
+    const el = document.createElement('div');
+    el.className = 'av-opt'; el.textContent = a;
+    el.onclick = (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.av-opt').forEach(x => x.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedAv = a;
+    };
+    grid.appendChild(el);
+  });
+}
+
+function openAvPicker() {
+  if (!document.getElementById('av-picker')) return;
+  // preselect current avatar immediately
+  document.querySelectorAll('.av-opt').forEach(x => {
+    x.classList.toggle('selected', x.textContent === selectedAv);
+  });
+  // prefill mood from current displayed value
+  const curMood = document.getElementById('my-mood-text').textContent;
+  document.getElementById('mood-input').value = (curMood === 'Ajouter une humeur...' || curMood === 'en ligne') ? '' : curMood;
+  document.getElementById('av-picker').classList.add('open');
+}
+
+function closeAvPicker() {
+  document.getElementById('av-picker').classList.remove('open');
+}
+
+function setMoodQuick(text) {
+  document.getElementById('mood-input').value = text;
+}
+
+function saveProfile() {
+  const mood = document.getElementById('mood-input').value.trim() || 'en ligne';
+  db.ref('profiles/' + currentUser).set({ avatar: selectedAv, mood, updatedAt: Date.now() })
+    .then(() => {
+      // update UI immediately without waiting for listener
+      document.getElementById('my-av').textContent = selectedAv;
+      document.getElementById('my-mood-text').textContent = mood;
+      document.getElementById('mob-my-av').textContent = selectedAv;
+      document.getElementById('mob-my-mood').textContent = mood;
+      closeAvPicker();
+      showToast('Profil mis à jour ✓');
+    });
+}
+
+function listenProfiles() {
+  const other = currentUser === 'alice' ? 'lenaic' : 'alice';
+  const otherName = other === 'alice' ? 'Alice' : 'Lénaïc';
+
+  // my profile
+  db.ref('profiles/' + currentUser).on('value', snap => {
+    const p = snap.val();
+    const av = p?.avatar || '😊';
+    const mood = p?.mood || 'Ajouter une humeur...';
+    selectedAv = av;
+    // sidebar
+    document.getElementById('my-av').textContent = av;
+    document.getElementById('my-mood-text').textContent = mood;
+    // mobile
+    document.getElementById('mob-my-av').textContent = av;
+    document.getElementById('mob-my-mood').textContent = mood;
+  });
+
+  // other's profile
+  document.getElementById('other-name').textContent = otherName;
+  db.ref('profiles/' + other).on('value', snap => {
+    const p = snap.val();
+    const av = p?.avatar || '😊';
+    const mood = p?.mood || 'hors ligne';
+    // sidebar
+    document.getElementById('other-av').textContent = av;
+    document.getElementById('other-mood').textContent = mood;
+    // mobile
+    document.getElementById('mob-other-av').textContent = av;
+    document.getElementById('mob-other-mood').textContent = mood;
+  });
+}
+
+// close av-picker on overlay click — uses event delegation so no timing issue
+
+
+// ── VIEWS ──
+function switchView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  // PC nav
+  document.querySelectorAll('.nb').forEach(el => el.classList.remove('active'));
+  const pcBtn = document.getElementById('pc-nav-' + v);
+  if (pcBtn) pcBtn.classList.add('active');
+  // Mobile nav
+  document.querySelectorAll('.bnb').forEach(el => el.classList.remove('active'));
+  const mobBtn = document.getElementById('mob-nav-' + v);
+  if (mobBtn) mobBtn.classList.add('active');
+}
+
+// ── HELPERS ──
+function insertEmoji(e) {
+  const i = document.getElementById('msg-input'); i.value += e; i.focus();
+}
+
+function toggleStickers() {
+  const popup = document.getElementById('sticker-popup');
+  const btn = document.querySelector('.sticker-toggle');
+  if (!popup.classList.contains('open')) {
+    const rect = btn.getBoundingClientRect();
+    const isMobile = window.innerWidth <= 640;
+    if (!isMobile) {
+      popup.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+      popup.style.left = rect.left + 'px';
+      popup.style.width = '280px';
+    }
+  }
+  popup.classList.toggle('open');
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+  else onTyping();
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+  onTyping();
+}
+
+function showModal(icon, title, body, msg) {
+  document.getElementById('modal-icon').textContent = icon;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').textContent = body;
+  const m = document.getElementById('modal-msg');
+  if (msg) { m.textContent = msg; m.style.display = 'block'; } else { m.style.display = 'none'; }
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+let toastT;
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+document.addEventListener('click', e => {
+  // close sticker popup
+  if (!e.target.closest('#sticker-popup') && !e.target.closest('.sticker-toggle'))
+    document.getElementById('sticker-popup').classList.remove('open');
+  // close modal
+  if (e.target === document.getElementById('modal')) closeModal();
+  // close av-picker
+  if (e.target && e.target.id === 'av-picker') closeAvPicker();
+});
+
+// prevent double-tap zoom on mobile
+document.addEventListener('touchend', e => {
+  if (e.target.tagName === 'BUTTON') e.preventDefault();
+}, { passive: false });
+
+// init avatar picker once DOM is fully ready (it's injected after this script)
+window.addEventListener('DOMContentLoaded', () => {
+  // av-picker HTML is already in the DOM (placed before </body>)
+  // but we call this here just in case
+  initAvatarPicker();
+});
+// also call immediately in case DOMContentLoaded already fired
+if (document.readyState !== 'loading') initAvatarPicker();
+</script>
+
+<!-- AVATAR PICKER -->
+<div class="av-picker" id="av-picker">
+  <div class="av-picker-box">
+    <div class="av-picker-title">Mon profil ✨</div>
+    <div class="av-grid" id="av-grid"></div>
+    <div class="mood-section">
+      <div class="mood-label">Humeur du jour</div>
+      <div class="mood-input-row">
+        <input type="text" id="mood-input" placeholder="ex: je t'aime 🥰" maxlength="40">
+      </div>
+      <div class="mood-quick">
+        <span class="mq" onclick="setMoodQuick('focus + aura ✨')">focus + aura ✨</span>
+        <span class="mq" onclick="setMoodQuick('main character energy 🌟')">main character energy 🌟</span>
+        <span class="mq" onclick="setMoodQuick('vibe douce 🌸')">vibe douce 🌸</span>
+        <span class="mq" onclick="setMoodQuick('silence 🤫')">silence 🤫</span>
+        <span class="mq" onclick="setMoodQuick('en mode PNJ 🚶')">en mode PNJ 🚶</span>
+        <span class="mq" onclick="setMoodQuick('en PLS académique 📚')">en PLS académique 📚</span>
+        <span class="mq" onclick="setMoodQuick('je travaille 💻')">je travaille 💻</span>
+        <span class="mq" onclick="setMoodQuick('je vais disparaître 2h 👻')">je vais disparaître 2h 👻</span>
+        <span class="mq" onclick="setMoodQuick('flemme de tout le monde 🫠')">flemme de tout le monde 🫠</span>
+        <span class="mq" onclick="setMoodQuick('humeur instable ⚡')">humeur instable ⚡</span>
+        <span class="mq" onclick="setMoodQuick('légèrement saoulée 😮‍💨')">légèrement saoulée 😮‍💨</span>
+        <span class="mq" onclick="setMoodQuick('je pense à toi 💭')">je pense à toi 💭</span>
+        <span class="mq" onclick="setMoodQuick('humeur stable 🧘')">humeur stable 🧘</span>
+        <span class="mq" onclick="setMoodQuick('dodo 😴')">dodo 😴</span>
+        <span class="mq" onclick="setMoodQuick('productive 🔥')">productive 🔥</span>
+        <span class="mq" onclick="setMoodQuick('cerveau en pause 🫧')">cerveau en pause 🫧</span>
+        <span class="mq" onclick="setMoodQuick('musicien mode 🎵')">musicien mode 🎵</span>
+        <span class="mq" onclick="setMoodQuick('fatigué 🥱')">fatigué 🥱</span>
+      </div>
+    </div>
+    <button class="av-save-btn" onclick="saveProfile()">Sauvegarder ✓</button>
+  </div>
+</div>
+
+<!-- MOBILE PROFILE BAR -->
+<div class="mob-profile-bar" id="mob-profile-bar">
+  <div class="mob-my-av" onclick="openAvPicker()" id="mob-my-av">😊</div>
+  <div class="mob-my-info">
+    <div class="mob-my-name" id="mob-my-name">—</div>
+    <div class="mob-my-mood" onclick="openAvPicker()" id="mob-my-mood">Ajouter une humeur...</div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+    <div class="mob-other-av" id="mob-other-av">😊</div>
+    <div class="mob-other-mood" id="mob-other-mood">—</div>
+  </div>
+</div>
+
+</body>
+</html>
